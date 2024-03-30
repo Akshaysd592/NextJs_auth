@@ -12,16 +12,16 @@ export const sendEmail = async({email,emailType,userId}:any)=>{
       const hashedToken  =   await bcryptjs.hash(userId.toString(),10)
         if(emailType ==="VERIFY"){
         await User.findByIdAndUpdate(userId,
-            {
+           {$set: {
                 verifyToken:hashedToken,
                 verifyTokenExpiry:Date.now()+3600000
-            })
+            }})
         }else if(emailType === "RESET"){
            await User.findByIdAndUpdate(userId,
-            {
+            {$set:{
                 forgotPasswordToken:hashedToken,
                 forgotPasswordTokenExpiry:Date.now()+3600000
-            })
+            }})
         }
 
 
@@ -54,7 +54,7 @@ export const sendEmail = async({email,emailType,userId}:any)=>{
         from:"akshaypro@gmail.com",
         to:`${email}`,
         subject:emailType === "VERIFY"?"Verify Your Email":"Reset Your Password",
-        html:`${emailType}==="VERIFY"? ${verifyTemplate}:${resetTemplate}`,
+        html:`${emailType === "VERIFY"} ?  ${verifyTemplate}:${resetTemplate}`,
       }
 
       const mailresponse =  await transporter.sendMail(mailOptions)
