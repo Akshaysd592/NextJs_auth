@@ -31,7 +31,7 @@ export default function LoginPage(){
 
             
         } catch (error:any) {
-            console.log("login Failed");
+            console.log("login Failed",error.message);
             setLoading(false);
             toast.error(error.message);
 
